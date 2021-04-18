@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo } from '../../../store/todoSlice';
-
+import { addTodo, addTodoAsync } from '../../../store/todoSlice';
 export default function Form() {
     const [ value, setValue ] = useState( '' );
     const dispatch = useDispatch();
 
     function handleSubmit( e ) {
         e.preventDefault();
-        const action = addTodo( { title: value } ); // return an object, action is a object.
-        dispatch( action );
-        setValue( '' );
+        if ( value ) {
+            const action = addTodoAsync( { title: value } ); // return an object, action is a object.
+            dispatch( action );
+            setValue( '' );
+        }
     }
 
     return (
