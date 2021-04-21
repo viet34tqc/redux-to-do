@@ -14,10 +14,12 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "yarn watch:css && react-scripts start",
+    "build": "SET NODE_ENV=production && yarn build:css && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "watch:css": "postcss src/css/tailwind.css -o src/css/output.css",
+    "build:css": "postcss src/css/tailwind.css -o src/css/output.css"
   },
   "eslintConfig": {
     "extends": [
@@ -36,5 +38,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.5",
+    "postcss": "^8.2.10",
+    "postcss-cli": "^8.3.1",
+    "tailwindcss": "^2.1.1"
   }
 }
