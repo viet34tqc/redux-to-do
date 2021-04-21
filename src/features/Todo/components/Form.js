@@ -1,30 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { addTodo, addTodoAsync } from '../../../store/todoSlice';
+import { useForm } from '../../../hooks/useForm';
+import { addTodoAsync } from '../../../store/todoSlice';
+
 export default function Form() {
-    const [ value, setValue ] = useState( '' );
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
+	const { handleSubmit, handleChange, data, setData, errors } = useForm( {
+		validations: {
+			title: {
+				required: {
+					value: true,
+					message: 'This field is required',
+				}
+			}
+		},
+		onSubmit
+	} );
 
-    function handleSubmit( e ) {
-        e.preventDefault();
-        if ( value ) {
-            const action = addTodoAsync( { title: value } ); // return an object, action is a object.
-            dispatch( action );
-            setValue( '' );
-        }
-    }
+	function onSubmit( e ) {
+		const action = addTodoAsync( { title: data.title } ); // return an object, action is a object.
+		dispatch( action );
+		setData( '' );
+	}
 
-    return (
-        <div>
-            <form action="" onSubmit={ handleSubmit }>
-                <input
-                    type="text"
-                    value={ value }
-                    onChange={ e => setValue( e.target.value ) }
-                />
-                <input type="submit" value="" />
-            </form>
-        </div>
-    );
+	return (
+		<div>
+			<form action="" onSubmit={ handleSubmit }>
+				{ errors.title && <p className="error">{ errors.title }</p> }
+				<input
+					type="text"
+					value={ data.title || '' }
+					onChange={ handleChange( 'title' ) }
+				/>
+				<input type="submit" value="" />
+			</form>
+		</div>
+	);
 }
 

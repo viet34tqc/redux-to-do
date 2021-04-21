@@ -3,11 +3,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const getTodosAsync = createAsyncThunk(
 	'todos/getTodosAsync',
 	async () => {
-		const res = await fetch( 'http://localhost:7000/todos' );
-		if ( res.ok ) {
-			const todos = await res.json();
-			return { todos }; // payload
+		const res = await fetch( 'http://localhost:7000/todos2' );
+		if ( !res.ok ) {
+			return {};
 		}
+		const todos = await res.json();
+		return { todos }; // payload
 	}
 );
 
@@ -22,10 +23,16 @@ export const addTodoAsync = createAsyncThunk(
 			},
 			body: JSON.stringify( { title: payload.title } ),
 		} );
-		if ( res.ok ) {
-			const todo = await res.json();
+		if ( !res.ok ) {
+			const todo = {
+				id: Math.random().toString( 36 ).substr( 2, 9 ),
+				completed: false,
+				title: payload.title
+			};
 			return { todo };
 		}
+		const todo = await res.json();
+		return { todo };
 	}
 );
 
