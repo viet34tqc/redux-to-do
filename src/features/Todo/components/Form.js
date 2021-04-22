@@ -1,7 +1,18 @@
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm } from '../../../hooks/useForm';
 import { addTodoAsync } from '../../../store/todoSlice';
+
+const useStyles = makeStyles( ( theme ) => ( {
+	root: {
+		'& .submit': {
+			marginLeft: '10px'
+		},
+	},
+} ) );
 
 export default function Form() {
 	const dispatch = useDispatch();
@@ -23,16 +34,21 @@ export default function Form() {
 		setData( '' );
 	}
 
+	const classes = useStyles();
+
 	return (
-		<div>
+		<div className={ classes.root }>
 			<form action="" onSubmit={ handleSubmit }>
 				{ errors.title && <p className="error">{ errors.title }</p> }
-				<input
+				<TextField
 					type="text"
+					placeholder="Add todo"
 					value={ data.title || '' }
 					onChange={ handleChange( 'title' ) }
 				/>
-				<input type="submit" value="" />
+				<Button variant="contained" color="primary" className="submit">
+					Submit
+      			</Button>
 			</form>
 		</div>
 	);

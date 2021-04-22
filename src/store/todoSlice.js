@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const getTodosAsync = createAsyncThunk(
 	'todos/getTodosAsync',
 	async () => {
-		const res = await fetch( 'http://localhost:7000/todos2' );
+		const res = await fetch( 'http://localhost:7000/todos' );
 		if ( !res.ok ) {
 			return {};
 		}
