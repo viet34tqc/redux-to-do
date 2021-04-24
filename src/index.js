@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import App from './App';
-import store from './store/store';
+import { TodoProvider } from './context/todoContext';
+
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={ store }>
+    <TodoProvider>
       <App />
-    </Provider>
+    </TodoProvider>
   </React.StrictMode>,
   document.getElementById( 'root' )
 );

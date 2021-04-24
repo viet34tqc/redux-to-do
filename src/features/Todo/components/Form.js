@@ -1,10 +1,9 @@
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useContext } from 'react';
+import { TodoContext } from '../../../context/todoContext';
 import { useForm } from '../../../hooks/useForm';
-import { addTodoAsync } from '../../../store/todoSlice';
 
 const useStyles = makeStyles( ( theme ) => ( {
 	root: {
@@ -15,7 +14,8 @@ const useStyles = makeStyles( ( theme ) => ( {
 } ) );
 
 export default function Form() {
-	const dispatch = useDispatch();
+	const { todos, setTodos } = useContext( TodoContext );
+
 	const { handleSubmit, handleChange, data, setData, errors } = useForm( {
 		validations: {
 			title: {
@@ -28,9 +28,25 @@ export default function Form() {
 		onSubmit
 	} );
 
-	function onSubmit( e ) {
-		const action = addTodoAsync( { title: data.title } ); // return an object, action is a object.
-		dispatch( action );
+	async function onSubmit( e ) {
+		const title = data.title;
+		const res = await fetch( 'http://localhost:7000/todos', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify( { title } ),
+		} );
+		if ( !res.ok ) {
+			const todo = {
+				id: Math.random().toString( 36 ).substr( 2, 9 ),
+				completed: false,
+				title
+			};
+			return { todo };
+		}
+		const todo = await res.json();
+		setTodos( [ ...todos, todo ] );
 		setData( '' );
 	}
 
@@ -46,7 +62,7 @@ export default function Form() {
 					value={ data.title || '' }
 					onChange={ handleChange( 'title' ) }
 				/>
-				<Button variant="contained" color="primary" className="submit">
+				<Button type="submit" variant="contained" color="primary" className="submit">
 					Submit
       			</Button>
 			</form>
